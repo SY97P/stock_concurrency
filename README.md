@@ -6,7 +6,7 @@
 - 재고량 감소 = select + decrease + update
 - 한 스레드가 select 하고 update 하기 전, 다른 스레드에서 select 를 하게 되어 동시성 문제 발생
 
-## Synchronized
+## Synchronized 방법
 - 메소드에 `synchronized` 키워드
 - 한 스레드의 요청이 끝날 때까지 다른 스레드를 대기시킴
 ### @Transactional 어노테이션과 함께 쓰지 못함
@@ -64,3 +64,25 @@
 #### 동작
 - 테이블이나 레코드가 아니라, 메타 데이터에 락 수행
 ![Named_Lock.png](Named_Lock.png)
+
+## Redis 방법
+
+### Lettuce
+#### 특성
+- `setnx 명령어` 활용 분산락 구현
+  - `키-값`을 넣을 때 기존 값이 없는 경우에만 넣을 수 있음
+- `spin lock` 방식
+  - 스레드가 락을 획득할 수 있는지 계속 확인하여 락 획득하는 방식
+  - 개발자가 직접 재시도 로직 구현 필요
+#### 동작
+![Lettuce.png](Lettuce.png)
+
+### Redisson
+#### 특성
+- pub-sub 기반으로 락 구현 제공
+  - `채널`을 하나 만듬
+  - 락으로 자원 선점한 스레드가 해제 후 `다른 스레드에게 락 해제를 알림`
+  - 알림을 받은 스레드가 락 획득 시도를 하는 방식
+- 별도의 재시도 로직 필요 없음
+#### 동작
+![Redisson.png](Redisson.png)
