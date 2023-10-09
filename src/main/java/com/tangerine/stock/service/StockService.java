@@ -3,7 +3,6 @@ package com.tangerine.stock.service;
 import com.tangerine.stock.domain.Stock;
 import com.tangerine.stock.repository.StockRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class StockService {
@@ -14,7 +13,7 @@ public class StockService {
         this.stockRepository = stockRepository;
     }
 
-//    @Transactional
+    //    @Transactional
     public synchronized void decrease(Long id, Long quantity) {
         Stock stock = stockRepository.findById(id).orElseThrow();
         stock.decrease(quantity);
